@@ -1,0 +1,45 @@
+.Stocks__tweets {
+  display: flex;
+  flex-direction: column;
+}
+
+.Stock_tweets-tweet {
+  display: block;
+  border: 1px solid $black;
+  padding: 10px;
+  margin: 10px 0;
+}
+
+
+@media (min-width: 500px) {
+  .Stock_tweets-tweet {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+  }
+
+  .Stock_tweets-avatar {
+    grid-column: 1 / 2;
+    grid-row: 1 / 3;
+  }
+
+  .Stock_tweets-name {
+    grid-column: 2 / 3;
+    grid-row: 1 / 2;
+  }
+
+  .Stock_tweets-username {
+    grid-column: 2 / 3;
+    grid-row: 2 / 3;
+  }
+
+  .Stock_tweets-created {
+    grid-column: 3 / 4;
+    grid-row: 1 / 2;
+  }
+
+  .Stock_tweets-message {
+    grid-column: 1 / 4;
+    grid-row: 3 / 4;
+  }
+}

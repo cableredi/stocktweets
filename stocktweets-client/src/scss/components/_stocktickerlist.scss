@@ -1,0 +1,10 @@
+.StockTickerList {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.StockTickerList__stock {
+  padding: 10px;
+  margin: 10px;
+}
