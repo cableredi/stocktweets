@@ -14,34 +14,40 @@ export default function StockTweets(props) {
     });
 
     Promise.all(promises).then((data) => {
-      setTweets(data);
+      setTweets(data);      
     });
   };
 
   //Get stock data if StockTickers change in state
   useEffect(() => {
-    getData(stockTickers);
+    //const interval = setInterval(() => {
+      //setLatestIds([]);
+      getData(stockTickers);
+    //}, 15 * 1000);
+
+    //return () => clearTimeout(interval);
   }, [stockTickers]);
 
   //Get Tweet Counts
   function getCounts() {
-    let counts = [];
+    const counts = [];
 
-    console.log("tweets", tweets);
+    console.log('count length', counts.length)
+    console.log('tweets length', tweets.length)
+
     for (let i = 0; i < tweets.length; i++) {
-      counts.push({
-        [tweets[i].body.symbol.symbol]: tweets[i].body.messages.length - 1,
+      counts.push({ 
+        symbol: tweets[i].body.symbol.symbol,
+        count: tweets[i].body.messages.length - 1,
       });
     }
 
     const results = counts.map((count) => {
-      for (let key in count) {
         return (
-          <div key={key}>
-            <span>{key}: </span> {count[key]}
+          <div key={count.symbol}>
+            <span>{count.symbol}: </span> {count.count}
           </div>
-        );
-      }
+        )
     });
 
     return results;
@@ -61,7 +67,14 @@ export default function StockTweets(props) {
 
     newTweets.sort((a, b) => (a.created_at > b.created_at ? 1 : -1));
 
-    const data = newTweets.map((tweet) => {
+    const temp = newTweets;
+    const uniqueTweets = Array.from(new Set(temp.map((a) => a.id))).map(
+      (id) => {
+        return temp.find((a) => a.id === id);
+      }
+    );
+
+    const data = uniqueTweets.map((tweet) => {
       return (
         <div key={tweet.id} className="Stock_tweets-tweet">
           <div className="Stock_tweets-avatar">
@@ -75,7 +88,7 @@ export default function StockTweets(props) {
       );
     });
 
-    return (<div>Counts</div>), data;
+    return data;
   }
 
   return (

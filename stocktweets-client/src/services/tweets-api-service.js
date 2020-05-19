@@ -1,7 +1,9 @@
 import config from "../config";
 
-export async function TweetsApiService(symbol) {
-  const stocktwitsQuery = `${config.API_ENDPOINT_TWEETS}/${symbol}`;
+export async function TweetsApiService(symbol, parameters) {
+  const stocktwitsQuery = parameters 
+    ? `${config.API_ENDPOINT_TWEETS}/${symbol}.json?since=${parameters}`
+    : `${config.API_ENDPOINT_TWEETS}/${symbol}`;
 
   try {
     const response = await fetch(stocktwitsQuery, {
