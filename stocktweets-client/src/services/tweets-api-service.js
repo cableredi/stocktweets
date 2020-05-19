@@ -1,10 +1,10 @@
 import config from "../config";
 
-const TweetsApiService = {
-  get(stockTicker) {
-    console.log('Api stockTicker', stockTicker)
+export async function TweetsApiService(symbol) {
+  const stocktwitsQuery = `${config.API_ENDPOINT_TWEETS}/${symbol}`;
 
-    return fetch(config.API_ENDPOINT_TWEETS + "/" + stockTicker, {
+  try {
+    const response = await fetch(stocktwitsQuery, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -12,7 +12,22 @@ const TweetsApiService = {
     }).then((res) =>
       !res.ok ? res.json().then((e) => Promise.reject(e)) : res.json()
     );
-  },
-};
-
-export default TweetsApiService;
+    return {
+      statusCode: 200,
+      body: response.data,
+    };
+  } catch (error) {
+    if (error.response) {
+      const { errors } = error.response.data;
+      return {
+        statusCode: error.response.data.response.status,
+        body: JSON.stringify(errors),
+      };
+    } else {
+      return {
+        statusCode: 500,
+        body: JSON.stringify({ message: "Internal server error" }),
+      };
+    }
+  }
+}
