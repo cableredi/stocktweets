@@ -5,6 +5,7 @@ export default function StockTweets(props) {
   const { stockTickers = [] } = props;
   const [tweets, setTweets] = useState({});
 
+  //Fetch Stocks from StockTwits
   const getData = (tickers) => {
     const promises = [];
 
@@ -17,10 +18,12 @@ export default function StockTweets(props) {
     });
   };
 
+  //Get stock data if StockTickers change in state
   useEffect(() => {
     getData(stockTickers);
   }, [stockTickers]);
 
+  //Get Tweet Counts
   function getCounts() {
     let counts = [];
 
@@ -44,6 +47,7 @@ export default function StockTweets(props) {
     return results;
   }
 
+  //Get Tweets from state
   function getTweets() {
     let newTweets = [];
 
