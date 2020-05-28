@@ -4,12 +4,17 @@ const fetch = require('node-fetch');
 
 
 tweetsRouter
-  .route('/:ticker')
+  .route('/:ticker/:maxId?')
 
   .get((req, res) => {
-    const baseURL = 'https://api.stocktwits.com/api/2/streams/symbol/';
+    const ticker = req.params.ticker;
 
-    const apiUrl = `${baseURL}${req.params.ticker}.json`;
+    const baseURL = 'https://api.stocktwits.com/api/2/streams/symbol/';
+    let apiUrl = `${baseURL}${ticker}.json`;
+
+    if (req.params.maxId) {
+      apiUrl = apiUrl + `?since=${req.params.maxId}`;
+    }
 
     console.log('apiUrl', apiUrl);
     

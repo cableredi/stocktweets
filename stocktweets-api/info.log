@@ -1,3 +1,5 @@
 {"message":"fetch is not defined","level":"error"}
 {"message":"next is not defined","level":"error"}
 {"message":"next is not defined","level":"error"}
+{"message":"Assignment to constant variable.","level":"error"}
+{"message":"Assignment to constant variable.","level":"error"}

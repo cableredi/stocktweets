@@ -1,0 +1,15 @@
+.Stocks__search {
+  margin-bottom: 20px;
+  border: 1px solid $black;
+  padding: 20px;
+  background-color: $gray-medium-bg;
+}
+
+.Stocks__search-form input {
+  display: inline-block;
+  margin-bottom: 5px;
+}
+
+.Stocks__search-form button {
+  margin-left: 10px;
+}

@@ -1,9 +1,11 @@
 import config from "../config";
 
-export async function TweetsApiService(symbol, parameters) {
-  const stocktwitsQuery = parameters 
-    ? `${config.API_ENDPOINT_TWEETS}/${symbol}.json?since=${parameters}`
-    : `${config.API_ENDPOINT_TWEETS}/${symbol}`;
+export async function TweetsApiService(symbol, maxId = '') {
+  let stocktwitsQuery = `${config.API_ENDPOINT_TWEETS}/${symbol}`;
+  
+  if (maxId) {
+    stocktwitsQuery = `${config.API_ENDPOINT_TWEETS}/${symbol}/${maxId}`;
+  }
 
   try {
     const response = await fetch(stocktwitsQuery, {
@@ -16,6 +18,7 @@ export async function TweetsApiService(symbol, parameters) {
     );
     return {
       statusCode: 200,
+      ticker: symbol,
       body: response.data,
     };
   } catch (error) {
@@ -23,6 +26,7 @@ export async function TweetsApiService(symbol, parameters) {
       const { errors } = error.response.data;
       return {
         statusCode: error.response.data.response.status,
+        ticker: symbol,
         body: JSON.stringify(errors),
       };
     } else {

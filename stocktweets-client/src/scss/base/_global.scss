@@ -21,6 +21,16 @@ ul {
   list-style: none;
 }
 
+label {
+  font-weight: 700;
+  font-size: 1.2em;
+}
+
 .Stocks {
   margin: 50px;
+}
+
+.Stock__heading-sub {
+  font-size: .8em;
+  font-style: italic;
 }

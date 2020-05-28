@@ -1,6 +1,8 @@
 import React, { useState } from "react";
+import PropTypes from "prop-types";
 
-export default function Searchbar(props) {
+export default function Search(props) {
+  const { setSearchValue } = props;
   const [userInput, setUserInput] = useState("");
   const inputSymbols = [];
 
@@ -16,7 +18,7 @@ export default function Searchbar(props) {
       return newSymbol ? inputSymbols.push(checkTicker(symbol)) : "";
     });
 
-    props.setSearchValue(inputSymbols);
+    setSearchValue(inputSymbols);
     setUserInput("");
   }
 
@@ -39,8 +41,7 @@ export default function Searchbar(props) {
   }
 
   return (
-    <form className="SearchTickerForm" onSubmit={(e) => handleSubmit(e)}>
-      <label htmlFor="ticker">Ticker Symbols: </label>
+    <form className="Stocks__search-form" onSubmit={(e) => handleSubmit(e)}>
       <input
         type="search"
         name="ticker"
@@ -48,9 +49,13 @@ export default function Searchbar(props) {
         value={userInput}
         onChange={handleUserInput}
       />
-      <button className="SearchTickerForm__button" type="submit">
+      <button type="submit">
         Search
       </button>
     </form>
   );
+}
+
+Search.defaultProps = {
+  setSearchValue: () => {},
 }
