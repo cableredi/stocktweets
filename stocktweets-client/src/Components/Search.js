@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import PropTypes from "prop-types";
 
 export default function Search(props) {
-  const { setSearchValue } = props;
+  const { setAddNewStockTweets } = props;
   const [userInput, setUserInput] = useState("");
   const inputSymbols = [];
 
@@ -18,7 +18,7 @@ export default function Search(props) {
       return newSymbol ? inputSymbols.push(checkTicker(symbol)) : "";
     });
 
-    setSearchValue(inputSymbols);
+    setAddNewStockTweets(inputSymbols);
     setUserInput("");
   }
 
@@ -49,8 +49,8 @@ export default function Search(props) {
         value={userInput}
         onChange={handleUserInput}
       />
-      <button type="submit">
-        Search
+      <button className="button draw-border" type="submit">
+        Add Ticker
       </button>
     </form>
   );
@@ -58,4 +58,4 @@ export default function Search(props) {
 
 Search.defaultProps = {
   setSearchValue: () => {},
-}
+};

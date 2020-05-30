@@ -1,18 +1,27 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { TweetsApiService } from "./services/tweets-api-service";
 import Search from "./Components/Search";
 import StockTickers from "./Components/StockTickers";
 import StockTweets from "./Components/StockTweets";
-import { addSearchValue, removeStock, combineTweets } from "./helpers/helpers";
 import useInterval from "./helpers/useInterval";
+import { GlobalContext } from "./Context/GlobalContext";
+import StockTwitsLogo from './Components/Images/ST_16x16.png';
 
 export default function App() {
-  const [stockTickers, setStockTickers] = useState([]);
-  const [tweets, setTweets] = useState([]);
-  const [maxIds, setMaxIds] = useState([]);
+  const {
+    setTweets,
+    setStockTickers,
+    tweets,
+    stockTickers,
+    addStockTicker,
+    addTweets,
+    updateTweets,
+  } = useContext(GlobalContext);
+  const [error, setError] = useState("");
 
   //Fetch Stocks from StockTwits
   const getInitialData = (tickers) => {
+    console.log("tickers", tickers);
     const promises = [];
 
     tickers.forEach((item) => {
@@ -20,101 +29,83 @@ export default function App() {
     });
 
     Promise.all(promises).then((data) => {
-      setTweets(data);
-
-      let tempMaxIds = maxIds;
-      data.map((item) => {
-        return tempMaxIds.push({
-          symbol: item.body.symbol.symbol,
-          value: item.body.cursor.since,
-        });
-      });
-      setMaxIds(tempMaxIds);
+      if (data.length > 0) {
+        if (data[0].statusCode === 200) {
+          setTweets(data);
+        }
+      } else {
+        setError("No tweets today");
+      }
     });
   };
 
-  //Fetch Stocks nNew from StockTwits
-  const getNewData = (tickers) => {
-    const promises = [];
+  const addNewTweets = (ticker) => {
+    TweetsApiService(ticker).then(addTweets).catch(setError);
+  };
 
-    //fetch data from API since last maxId
-    tickers.forEach((item) => {
-      const maxId = maxIds.find((symbol) => symbol.symbol === item);
+  const upDateTweets = (tickers) => {
+    tickers.forEach((ticker) => {
+      const maxId = tweets.find((tweet) => tweet.symbol === ticker).maxId;
+      console.log("maxId", maxId);
 
-      maxId
-        ? promises.push(TweetsApiService(item, maxId.value))
-        : promises.push(TweetsApiService(item));
-    });
-
-    Promise.all(promises).then((data) => {
-      let newTweets = tweets;
-      let tempMaxIds = maxIds;
-
-      for (let i = 0; i < data.length; i++) {
-
-        const index = tempMaxIds.findIndex(
-          (maxSymbol) => data[i].body.symbol.symbol === maxSymbol.symbol
-        );
-
-        if (data[i].body.cursor.since && tempMaxIds[index].value < data[i].body.cursor.since) {
-          tempMaxIds[index].value = data[i].body.cursor.since;
-
-          newTweets = combineTweets(tweets, data);
-        }
-      }
-      setMaxIds([...tempMaxIds]);
-
-      setTweets([...newTweets]);
+      TweetsApiService(ticker, maxId).then(updateTweets).catch(setError);
     });
   };
 
   //Initially load Stock Tickers from LocalStorage
   useEffect(() => {
     let tempStocks = JSON.parse(localStorage.getItem("stockticker"));
-    setStockTickers(tempStocks);
-    getInitialData(tempStocks);
+
+    if (tempStocks) {
+      setStockTickers(tempStocks);
+      getInitialData(tempStocks);
+    }
   }, []);
 
   useInterval(() => {
-    getNewData(stockTickers);
-  }, 15 * 1000);
+    upDateTweets(stockTickers);
+  }, 30 * 1000);
 
   // Handle search values from form and update storage
-  const handleSearchValue = (tickers) => {
-    const tempStorage = addSearchValue(tickers);
-
-    setStockTickers([...tempStorage]);
-
-    localStorage.setItem("stockticker", JSON.stringify(tempStorage));
+  const addNewStockTweets = (tickers) => {
+    console.log("addStockSymbol", tickers);
+    tickers.forEach((ticker) => {
+      addStockTicker(ticker);
+      addNewTweets(ticker);
+    });
   };
 
-  //Remove Stock
-  const handleRemoveStock = (ticker) => {
-    const tempStorage = removeStock(ticker);
-
-    setStockTickers([...tempStorage]);
-
-    localStorage.setItem("stockticker", JSON.stringify(tempStorage));
-  };
-
+  console.log("Render tweets", tweets);
+  console.log("Render stockTickers", stockTickers);
   return (
     <section className="Stocks">
       <div className="Stocks__heading">
-        <h1 className="Stocks__heading">
-          StockTweets <span className="Stock__heading-sub">powered by StockTwits</span>
+        <h1>
+          StockTweets
+          <span className="Stocks__heading-sub">
+            powered by
+            <a href="http://stocktwits.com">
+              <img
+                src={StockTwitsLogo}
+                alt="I'm on Stocktwits"
+              />
+              StockTwits
+            </a>
+          </span>
         </h1>
       </div>
 
       <div className="Stocks__search">
-        <Search setSearchValue={handleSearchValue} />
+        <Search setAddNewStockTweets={addNewStockTweets} />
       </div>
 
       <div className="Stocks__tickers">
-        <StockTickers stockTickers={stockTickers} removeStock={handleRemoveStock} tweets={tweets} />
+        <StockTickers />
       </div>
 
       <div className="Stocks__tweets">
-        <StockTweets tweets={tweets} />
+        {error && <p className="error">There was an error retrieving the data: {error}</p>}
+        <StockTweets />
       </div>
     </section>
   );

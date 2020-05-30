@@ -7,10 +7,10 @@ ol {
 }
 
 body {
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
   font-size: 16px;
   color: $gray-dark;
-  background: $gray-light-bg;
+  background: $white;
 }
 
 * {
@@ -23,14 +23,55 @@ ul {
 
 label {
   font-weight: 700;
-  font-size: 1.2em;
+  font-size: 18px;
+}
+
+a {
+  text-decoration: none;
+  color: $black;
 }
 
 .Stocks {
-  margin: 50px;
+  min-width: 320px;
+  margin: 10px;
 }
 
-.Stock__heading-sub {
-  font-size: .8em;
+.Stocks__heading h1 {
+  font-size: 1.6em;
+}
+
+.Stocks__heading-sub {
+  display: block;
+  font-size: 0.8em;
   font-style: italic;
+  margin-left: 10px;
+  img {
+    margin-left: 5px;
+    width: 16px;
+    height: 16px;
+  }
+}
+
+.error {
+  color: $red;
+  font-style: italic;
+  text-align: center;
+  margin-top: 50px;
+}
+
+@media (min-width: 500px) {
+  .Stocks {
+    margin: 25px;
+  }
+
+  .Stocks__heading-sub {
+    display: inline-block;
+    font-size: 0.7em;
+  }
+}
+
+@media (min-width: 800px) {
+  .Stocks {
+    margin: 50px;
+  }
 }

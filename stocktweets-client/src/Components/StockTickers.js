@@ -1,21 +1,33 @@
-import React from "react";
+import React, { useContext } from "react";
 import { handleCounts } from "../helpers/helpers";
+import { GlobalContext } from "../Context/GlobalContext";
+import TrashCan from "./Images/delete-black-18dp.svg";
 
-export default function StockTickers(props) {
-  const { stockTickers, tweets } = props;
+export default function StockTickers() {
+  const { tweets, deleteStockTicker, deleteTweets } = useContext(GlobalContext);
+
+  const handleOnClick = (e) => {
+    e.preventDefault();
+    console.log("handleDelete", e.target.value);
+    deleteStockTicker(e.target.value);
+    deleteTweets(e.target.value);
+  };
 
   //Get Tweet Counts
   const getCounts = () => {
     let results = [];
 
-    if (tweets.length > 0) {
+    if (tweets && tweets.length > 0) {
       const counts = handleCounts(tweets);
 
       results = counts.map((count) => {
         return (
-          <div key={count.symbol}>
-            <span>{count.title}: </span> {count.count}
-          </div>
+          <button key={count.symbol} value={count.symbol} onClick={(e) => handleOnClick(e)}>
+            <span className="Stocks__tickers-counts-symbol">{count.symbol}</span>
+            <span className="Stocks__tickers-counts-title">{count.title}</span>
+            <span className="Stocks__tickers-counts-count">Number of Tweets: {count.count}</span>
+            <img  className="Stocks__tickers-counts-img" src={TrashCan} alt="Remove" />
+          </button>
         );
       });
     } else {
@@ -25,31 +37,5 @@ export default function StockTickers(props) {
     return results;
   };
 
-  const tickers = stockTickers
-    ? stockTickers.map((item) => (
-        <div key={item} className="Stocks__tickers-stock">
-          <button value={item} onClick={(e) => handleOnClick(e)}>
-            {item}
-          </button>
-        </div>
-      ))
-    : [];
-
-  const handleOnClick = (e) => {
-    e.preventDefault();
-    props.removeStock(e.target.value);
-  };
-
-  return (
-    <>
-      <div className="Stocks__tickers-symbols">
-        <div className="Stocks__tickers-heading">Watching</div>
-        <div className="Stocks__tickers-list">{tickers}</div>
-      </div>
-      <div className="Stocks__tickers-counts">
-        <div className="Stocks__tickers-counts_header">References in Tweets</div>
-        <div className="Stocks__tickers-counts_data">{getCounts()}</div>
-      </div>
-    </>
-  );
+  return <div className="Stocks__tickers-counts">{getCounts()}</div>;
 }
