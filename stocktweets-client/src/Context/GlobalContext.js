@@ -37,7 +37,6 @@ export const GlobalProvider = ({ children }) => {
   }
 
   const deleteStockTicker = (ticker) => {
-    console.log('deleteStockTicker')
     dispatchStockTickers({
       type: "DELETE_STOCKTICKER",
       payload: ticker,

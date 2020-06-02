@@ -2,7 +2,7 @@
   border: 1px solid $black;
   border-radius: 5px;;
   padding: 20px;
-  background-color: $gray-medium-bg;
+  background-color: $blue-light;
   margin: 10px;
 }
 
@@ -19,6 +19,6 @@
   font-size: 18px;
   border-radius: 5px;
   &:hover {
-    border-color: #0000d8;
+    border-color: $blue;
   }
 }

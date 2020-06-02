@@ -5,7 +5,7 @@ import StockTickers from "./Components/StockTickers";
 import StockTweets from "./Components/StockTweets";
 import useInterval from "./helpers/useInterval";
 import { GlobalContext } from "./Context/GlobalContext";
-import StockTwitsLogo from './Components/Images/ST_16x16.png';
+import StockTwitsLogo from "./Components/Images/ST_16x16.png";
 
 export default function App() {
   const {
@@ -19,9 +19,8 @@ export default function App() {
   } = useContext(GlobalContext);
   const [error, setError] = useState("");
 
-  //Fetch Stocks from StockTwits
+  //Fetch Stocks from localStorage via StockTwits
   const getInitialData = (tickers) => {
-    console.log("tickers", tickers);
     const promises = [];
 
     tickers.forEach((item) => {
@@ -39,16 +38,35 @@ export default function App() {
     });
   };
 
+   //Add new Stock Tweets
   const addNewTweets = (ticker) => {
-    TweetsApiService(ticker).then(addTweets).catch(setError);
+    setError('');
+    TweetsApiService(ticker)
+      .then((data) => {
+        if (data.statusCode === 200 && data.body.response.status === 200) {
+          addStockTicker(data);
+          addTweets(data);
+        } else {
+          setError(data.body.errors[0].message + ':' + data.ticker);
+        }
+      })
+      .catch(setError);
   };
 
+  //Update Stock Tweets
   const upDateTweets = (tickers) => {
+    setError('');
     tickers.forEach((ticker) => {
       const maxId = tweets.find((tweet) => tweet.symbol === ticker).maxId;
-      console.log("maxId", maxId);
-
-      TweetsApiService(ticker, maxId).then(updateTweets).catch(setError);
+      TweetsApiService(ticker, maxId)
+      .then((data) => {
+        if (data.statusCode === 200 && data.body.response.status === 200) {
+          updateTweets(data)
+        } else {
+          setError(data.body.errors[0].message + ':' + data.ticker);
+        }
+      })
+      .catch(setError);
     });
   };
 
@@ -62,21 +80,18 @@ export default function App() {
     }
   }, []);
 
+  //Fetch new Stock Tweets from StockTwits every 30 seconds
   useInterval(() => {
     upDateTweets(stockTickers);
   }, 30 * 1000);
 
-  // Handle search values from form and update storage
+  // Handle search values from form and add new tweets
   const addNewStockTweets = (tickers) => {
-    console.log("addStockSymbol", tickers);
     tickers.forEach((ticker) => {
-      addStockTicker(ticker);
       addNewTweets(ticker);
     });
   };
 
-  console.log("Render tweets", tweets);
-  console.log("Render stockTickers", stockTickers);
   return (
     <section className="Stocks">
       <div className="Stocks__heading">
@@ -85,10 +100,7 @@ export default function App() {
           <span className="Stocks__heading-sub">
             powered by
             <a href="http://stocktwits.com">
-              <img
-                src={StockTwitsLogo}
-                alt="I'm on Stocktwits"
-              />
+              <img src={StockTwitsLogo} alt="I'm on Stocktwits" />
               StockTwits
             </a>
           </span>
@@ -104,7 +116,7 @@ export default function App() {
       </div>
 
       <div className="Stocks__tweets">
-        {error && <p className="error">There was an error retrieving the data: {error}</p>}
+        {error && <p className="error">{error}</p>}
         <StockTweets />
       </div>
     </section>

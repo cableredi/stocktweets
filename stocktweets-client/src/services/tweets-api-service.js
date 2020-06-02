@@ -12,6 +12,7 @@ export async function TweetsApiService(symbol, maxId = '') {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
+        'Authorization': config.API_KEY
       },
     }).then((res) =>
       !res.ok ? res.json().then((e) => Promise.reject(e)) : res.json()

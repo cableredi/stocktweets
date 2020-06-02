@@ -57,5 +57,9 @@ export default function Search(props) {
 }
 
 Search.defaultProps = {
-  setSearchValue: () => {},
+  setAddNewStockTweets: () => {},
 };
+
+Search.propTypes = {
+  setAddNewStockTweets: PropTypes.func.isRequired,
+}

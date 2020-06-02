@@ -1,9 +1,3 @@
-export const getUTCDate = (origDate) => {
-  let date = new Date(origDate);
-
-  return new Date(date.getTime() + date.getTimezoneOffset() * 60 * 1000);
-};
-
 //Get number of Tweets per Ticker
 export const handleCounts = (tweets) => {
   const counts = [];

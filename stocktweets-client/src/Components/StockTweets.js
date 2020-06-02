@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
-import { getUTCDate } from "../helpers/helpers";
 import { GlobalContext } from "../Context/GlobalContext";
+import { format } from 'date-fns';
 
 export default function StockTweets() {
   const { tweets } = useContext(GlobalContext);
@@ -25,6 +25,14 @@ export default function StockTweets() {
         return temp.find((a) => a.id === id);
       });
 
+      //get create-date and convert to local timezone and format
+      const getCurrentDate = (date) => {
+        let currentDate = new Date(date);
+        currentDate.toString();
+        return format(currentDate, 'MM-dd-yy hh:mm aa');
+      }
+
+      //render tweets
       const data = uniqueTweets.map((tweet) => {
         return (
           <div key={tweet.id} className="Stocks__tweets-tweet">
@@ -34,7 +42,7 @@ export default function StockTweets() {
             <div className="Stocks__tweets-name">{tweet.user.name}</div>
             <div className="Stocks__tweets-username">@{tweet.user.username}</div>
             <div className="Stocks__tweets-created">
-              {getUTCDate(tweet.created_at).toString().slice(0, 24)}
+              {getCurrentDate(tweet.created_at)}
             </div>
             <div className="Stocks__tweets-message">{tweet.body}</div>
           </div>
@@ -47,23 +55,8 @@ export default function StockTweets() {
     }
   };
 
-  const getErrors = () => {
-    let errors = "";
-
-    if (tweets) {
-      for (let i = 0; i < tweets.length; i++) {
-        if (tweets[i].status !== 200) {
-          errors = errors + tweets[i].ticker + ": " + tweets[i].body.errors[0].message + " ";
-        }
-      }
-    }
-
-    return errors;
-  };
-
   return (
     <>
-      <div className="Stocks__tweets-errors">{getErrors()}</div>
       <div>{getTweets()}</div>
     </>
   );

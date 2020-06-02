@@ -6,11 +6,9 @@ import TrashCan from "./Images/delete-black-18dp.svg";
 export default function StockTickers() {
   const { tweets, deleteStockTicker, deleteTweets } = useContext(GlobalContext);
 
-  const handleOnClick = (e) => {
-    e.preventDefault();
-    console.log("handleDelete", e.target.value);
-    deleteStockTicker(e.target.value);
-    deleteTweets(e.target.value);
+  const handleOnClick = (symbol) => {
+    deleteStockTicker(symbol);
+    deleteTweets(symbol);
   };
 
   //Get Tweet Counts
@@ -22,12 +20,21 @@ export default function StockTickers() {
 
       results = counts.map((count) => {
         return (
-          <button key={count.symbol} value={count.symbol} onClick={(e) => handleOnClick(e)}>
-            <span className="Stocks__tickers-counts-symbol">{count.symbol}</span>
-            <span className="Stocks__tickers-counts-title">{count.title}</span>
-            <span className="Stocks__tickers-counts-count">Number of Tweets: {count.count}</span>
-            <img  className="Stocks__tickers-counts-img" src={TrashCan} alt="Remove" />
-          </button>
+          <div
+            key={count.symbol}
+            className="Stocks__tickers-counts"
+            onClick={() => handleOnClick(count.symbol)}
+          >
+            <div className="Stocks__tickers-counts-symbol">{count.symbol}</div>
+            <div className="Stocks__tickers-counts-title">{count.title}</div>
+            <div className="Stocks__tickers-counts-count">
+              <span className="strong">Tweets: </span>
+              {count.count}
+            </div>
+            <div className="Stocks__tickers-counts-button">
+              <img className="Stocks__tickers-counts-img" src={TrashCan} alt="Remove" />
+            </div>
+          </div>
         );
       });
     } else {
@@ -37,5 +44,5 @@ export default function StockTickers() {
     return results;
   };
 
-  return <div className="Stocks__tickers-counts">{getCounts()}</div>;
+  return <div>{getCounts()}</div>;
 }

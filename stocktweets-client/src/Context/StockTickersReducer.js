@@ -10,7 +10,7 @@ export default (state, action) => {
         tempStorage = [];
       }
 
-      tempStorage.push(action.payload);
+      tempStorage.push(action.payload.ticker);
 
       localStorage.setItem("stockticker", JSON.stringify(tempStorage));
 
@@ -18,7 +18,6 @@ export default (state, action) => {
 
     case "DELETE_STOCKTICKER":
       const tempTickers = state.filter((ticker) => ticker !== action.payload);
-      console.log("tempTickers", tempTickers);
       localStorage.setItem("stockticker", JSON.stringify(tempTickers));
 
       return tempTickers;

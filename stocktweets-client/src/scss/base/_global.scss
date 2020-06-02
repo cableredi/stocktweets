@@ -31,13 +31,18 @@ a {
   color: $black;
 }
 
+.strong {
+  font-weight: 600;
+}
+
 .Stocks {
   min-width: 320px;
-  margin: 10px;
+  margin-top: 10px;
 }
 
 .Stocks__heading h1 {
   font-size: 1.6em;
+  margin-left: 10px;
 }
 
 .Stocks__heading-sub {
@@ -70,8 +75,37 @@ a {
   }
 }
 
-@media (min-width: 800px) {
+@media (min-width: 700px) {
   .Stocks {
-    margin: 50px;
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    border: 1px solid $black;
+    margin: 10px;
+    padding: 5px;
+    border-radius: 5px;
+    row-gap: 5px;
+    .Stocks__heading {
+      grid-column: 1 / 3;
+      grid-row: 1 / 2;
+      justify-self: start;
+    }
+    .Stocks__search {
+      grid-column: 1 / 2;
+      grid-row: 2 / 3;
+      justify-self: stretch;
+      align-self: start;
+    }
+    .Stocks__tickers {
+      grid-column: 1 / 2;
+      grid-row: 3 / 4;
+      justify-self: stretch;
+      align-self: start;
+    }
+    .Stocks__tweets {
+      grid-column: 2 / 3;
+      grid-row: 2 / 5;
+      justify-self: stretch;
+      align-self: start;
+    }
   }
 }
