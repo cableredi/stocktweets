@@ -1,6 +1,6 @@
 {
   "name": "stocktweets",
-  "version": "12.13.0",
+  "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -11,6 +11,9 @@
     "deploy": "git push heroku master"
   },
   "keywords": [],
+  "engines": {
+    "node": "12.13.0"
+  },
   "author": "",
   "license": "ISC",
   "dependencies": {
