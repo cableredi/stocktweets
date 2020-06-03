@@ -15,8 +15,6 @@ tweetsRouter
     if (req.params.maxId) {
       apiUrl = apiUrl + `?since=${req.params.maxId}`;
     }
-
-    console.log('apiUrl', apiUrl);
     
     fetch(apiUrl)
     .then(res => res.json())
