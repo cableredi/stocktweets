@@ -2,6 +2,8 @@
 
 StockTweets gets all the latest tweets in realtime from your favorite Stock Tickers powered by StockTwits
 
+![Landing Page](./StockTweets.PNG)
+
 ## Live site:
 [https://stocktweets.now.sh/](https://stocktweets.now.sh/)
 
