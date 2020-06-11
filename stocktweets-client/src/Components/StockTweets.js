@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { GlobalContext } from "../Context/GlobalContext";
-import { differenceInMinutes } from 'date-fns';
+import { formatDistanceToNow } from 'date-fns';
 
 export default function StockTweets() {
   const { tweets } = useContext(GlobalContext);
@@ -30,11 +30,7 @@ export default function StockTweets() {
         let createdDate = new Date(date);
         createdDate.toString();
 
-        let currentDate = new Date();
-
-        const difference = differenceInMinutes(currentDate, createdDate);
-
-        return difference === 0 ? 'Now' : difference + ' min ago';
+        return formatDistanceToNow(createdDate);
       }
 
       //render tweets
